@@ -1,25 +1,38 @@
+import { GoogleAuthProvider } from "firebase/auth";
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthProvider/AuthProvider";
+import Loading from "../../Loading/Loading";
 
 const SignIn = () => {
   const [signInError, setSignInError] = useState('')
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const {signInUserByEmail} = useContext(AuthContext)
+  const {signInUserByEmail, googleLogIn} = useContext(AuthContext)
+  const provider = new GoogleAuthProvider();
+
   const navigate = useNavigate()
 
   const handleSignIn=(data)=>{
     signInUserByEmail(data.email, data.password)
     .then((result) => {
       const user = result.user;
+      <Loading></Loading>
       navigate('/')
     })
     .catch((error) => {
       setSignInError(error.message);
     });
   }
+  const handleGoogleSignIn = () => {
+    googleLogIn(provider)
+      .then((result) => {
+        const user = result.user;
+        // navigate(from, { replace: true });
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
     <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
@@ -96,7 +109,7 @@ const SignIn = () => {
           <hr className="flex-1 border-gray-300" />
         </div>
         <button
-          href="/"
+          onClick={handleGoogleSignIn}
           className="inline-flex items-center justify-center w-full h-12 px-6 font-semibold transition duration-200 bg-white border border-gray-300 rounded md:w-auto hover:bg-gray-100 focus:shadow-outline focus:outline-none"
         >
           Sign In with Google

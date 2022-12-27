@@ -22,7 +22,7 @@ export const NavBar = () => {
           className="inline-flex items-center"
         >
           <span className="ml-2 text-xl font-bold tracking-wide text-gray-800 uppercase">
-            Company
+            Amar Kotha
           </span>
         </Link>
         <ul className="items-center hidden space-x-8 lg:flex">
@@ -54,17 +54,10 @@ export const NavBar = () => {
               title="About us"
               className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
             >
-              About us
+              About
             </Link>
           </li>
-          {user ? (
-            <button
-              onClick={handleLogOut}
-              className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
-            >
-              Log Out
-            </button>
-          ) : (
+          {!user && (
             <>
               <li>
                 <Link
@@ -87,6 +80,45 @@ export const NavBar = () => {
                 </Link>
               </li>
             </>
+          )}
+          {user && (
+            <div className="dropdown">
+              <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                <div className="w-10 rounded-full">
+                  <img src={user?.photoURL} alt="" />
+                </div>
+              </label>
+              <ul
+                tabIndex={0}
+                className="menu menu-compact dropdown-content shadow bg-base-100 rounded-box w-40"
+              >
+                <div className="flex justify-center">
+                  <img
+                    onClick={() => setIsMenuOpen(false)}
+                    src={user?.photoURL}
+                    alt=""
+                    className="h-16 w-16 rounded-full p-2"
+                  />
+                </div>
+                <li className="btn btn-sm">
+                  <Link
+                    to="/Profile"
+                    onClick={() => setIsMenuOpen(false)}
+                    className=""
+                  >
+                    View Profile
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    className="inline-flex items-center justify-center py-2 w-20 mx-auto my-2 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-orange-400 focus:shadow-outline focus:outline-none"
+                    onClick={handleLogOut}
+                  >
+                    LogOut
+                  </button>
+                </li>
+              </ul>
+            </div>
           )}
         </ul>
         <div className="lg:hidden">
@@ -122,23 +154,8 @@ export const NavBar = () => {
                       title="Company"
                       className="inline-flex items-center"
                     >
-                      {/* <svg
-                          className="w-8 text-deep-purple-accent-400"
-                          viewBox="0 0 24 24"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeMiterlimit="10"
-                          stroke="currentColor"
-                          fill="none"
-                        >
-                          <rect x="3" y="1" width="7" height="12" />
-                          <rect x="3" y="17" width="7" height="6" />
-                          <rect x="14" y="1" width="7" height="6" />
-                          <rect x="14" y="11" width="7" height="12" />
-                        </svg> */}
                       <span className="ml-2 text-xl font-bold tracking-wide text-gray-800 uppercase">
-                        Company
+                        Amar Kotha
                       </span>
                     </Link>
                   </div>
@@ -160,6 +177,44 @@ export const NavBar = () => {
                 </div>
                 <nav>
                   <ul className="space-y-4">
+                    {user && (
+                      <div className="dropdown">
+                        <label
+                          tabIndex={0}
+                          className="btn btn-ghost btn-circle avatar"
+                        >
+                          <div className="w-10 rounded-full">
+                            <img src={user?.photoURL} alt="" />
+                          </div>
+                        </label>
+                        <ul
+                          tabIndex={0}
+                          className="menu menu-compact dropdown-content shadow bg-base-200 rounded-box w-52"
+                        >
+                          <li>
+                            <div className="flex justify-center">
+                              <img
+                                src={user?.photoURL}
+                                alt=""
+                                className="h-14 w-14 rounded-full"
+                              />
+                            </div>
+                          </li>
+                          <li className="btn btn-sm">
+                            <Link
+                              to="/Profile"
+                              onClick={() => setIsMenuOpen(false)}
+                              className="justify-between"
+                            >
+                              View Profile
+                            </Link>
+                          </li>
+                          <li>
+                            <button className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none" onClick={handleLogOut}>Logout</button>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
                     <li>
                       <Link
                         to="/"
@@ -191,17 +246,10 @@ export const NavBar = () => {
                         title="About us"
                         className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
                       >
-                        About us
+                        About
                       </Link>
                     </li>
-                    {user ? (
-                      <button
-                        onClick={handleLogOut}
-                        className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
-                      >
-                        Log Out
-                      </button>
-                    ) : (
+                    {!user &&(
                       <>
                         <li>
                           <Link
