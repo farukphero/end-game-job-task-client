@@ -1,31 +1,37 @@
 import { GoogleAuthProvider } from "firebase/auth";
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthProvider/AuthProvider";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [signUpError, setSignUpError] = useState('')
   const { register, handleSubmit, formState: { errors } } = useForm();
   const {createUserByEmail,updateUser, googleLogIn} = useContext(AuthContext)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const provider = new GoogleAuthProvider();
 
   const handleSignUp=(data)=>{
     createUserByEmail(data.email, data.password)
     .then((result) => {
       const user = result.user;
+      toast.success('Sign In successful')
       const profile = {
         displayName: data.name,
-        // photoURL: user.photoURL,
       };
       updateUser(profile)
       .then(() => {
+        saveUser(data.name, data.email);
+        toast.success('Sign In successful')
+
       })
       .catch((error) => {
         console.log(error);
       });
-      navigate('/')
+      navigate(from, { replace: true });
     })
     .catch((error) => {
       setSignUpError(error.message);
@@ -36,9 +42,28 @@ const SignUp = () => {
     googleLogIn(provider)
       .then((result) => {
         const user = result.user;
-        // navigate(from, { replace: true });
+        saveUser(user?.displayName, user?.email);
+        navigate(from, { replace: true });
       })
       .catch((error) => console.log(error));
+  };
+
+  const saveUser = (name, email ) => {
+    const user = {
+      name,
+      email,
+    };
+    fetch("https://end-game-job-task-server.vercel.app/profileInfo", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        navigate(from, { replace: true });
+      });
   };
   return (
     <div>
@@ -47,35 +72,15 @@ const SignUp = () => {
           <div className="mb-12 lg:max-w-lg lg:pr-5 lg:mb-0">
             <div className="max-w-xl mb-6">
               <h2 className="max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:leading-none">
-                The quick, brown fox
-                <br className="hidden md:block" />
-                jumps over
-                <span className="inline-block text-deep-purple-accent-400">
-                  a lazy dog
-                </span>
+              “Social media is not a media. The key is to listen, engage, and build relationships.”
+
               </h2>
               <p className="text-base text-gray-700 md:text-lg">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae. explicabo.
+              You as a brand have to be completely confident about your position, because you will get criticism. You will have a negative reaction. If you didn’t get a negative reaction, that means you’re standing neutral and you have no point of view. Who wants to participate in that?
               </p>
             </div>
             <hr className="mb-6 border-gray-300" />
-            <div className="flex">
-              <a href="/" aria-label="Play Song" className="mr-3">
-                <div className="flex items-center justify-center w-10 h-10 text-white transition duration-300 transform rounded-full shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 hover:scale-110">
-                  <svg className="w-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M16.53,11.152l-8-5C8.221,5.958,7.833,5.949,7.515,6.125C7.197,6.302,7,6.636,7,7v10 c0,0.364,0.197,0.698,0.515,0.875C7.667,17.958,7.833,18,8,18c0.184,0,0.368-0.051,0.53-0.152l8-5C16.822,12.665,17,12.345,17,12 S16.822,11.335,16.53,11.152z" />
-                  </svg>
-                </div>
-              </a>
-              <div className="flex flex-col">
-                <div className="text-sm font-semibold">
-                  Rich the kid &amp; Famous Dex
-                </div>
-                <div className="text-xs text-gray-700">Rich Forever Intro</div>
-              </div>
-            </div>
+             
           </div>
           <div className="px-5 pt-6 pb-5 text-center border border-gray-300 rounded lg:w-2/5">
           <div className="flex justify-around">
@@ -83,7 +88,7 @@ const SignUp = () => {
        <p to='/SignUp' className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none">Sign Up</p>
        </div>
            <form onSubmit={handleSubmit(handleSignUp)}>
-           {/* <div className="lg:flex justify-between"> */}
+         
               
               <div>
               <label className="label">
@@ -98,18 +103,7 @@ const SignUp = () => {
                  
  
               </div>
-              {/* <div>
-              <label className="label">
-                 <span className="label-text">Last Name</span>
-               </label>
-               <input
-               {...register("lastName", { required: true })}
-                 type="text"
-                 placeholder="Enter Your Lat Name"
-                 className="input input-bordered w-full"
-               />
-              </div> */}
-               {/* </div> */}
+              
              <div>
                
                <label className="label">

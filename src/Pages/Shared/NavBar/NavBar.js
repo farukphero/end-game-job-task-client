@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { RiAccountCircleFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../Context/AuthProvider/AuthProvider";
 
@@ -21,14 +22,14 @@ export const NavBar = () => {
           title="Company"
           className="inline-flex items-center"
         >
-          <span className="ml-2 text-xl font-bold tracking-wide text-gray-800 uppercase">
+          <span className="ml-2 text-xl font-bold tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-accent via-purple-400 to-orange-600">
             Amar Kotha
           </span>
         </Link>
         <ul className="items-center hidden space-x-8 lg:flex">
           <li>
             <Link
-              to="/"
+              to="/Media"
               aria-label="Our product"
               title="Our product"
               className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
@@ -81,7 +82,7 @@ export const NavBar = () => {
               </li>
             </>
           )}
-          {user && (
+          {user?.photoURL && (
             <div className="dropdown">
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
@@ -120,6 +121,42 @@ export const NavBar = () => {
               </ul>
             </div>
           )}
+          {
+        !user?.photoURL &&  <div className="dropdown">
+        <label tabIndex={0} >
+          <div className=" rounded-full">
+          <RiAccountCircleFill className="h-16 w-16" />
+          </div>
+        </label>
+        <ul
+          tabIndex={0}
+          className="menu menu-compact dropdown-content shadow bg-base-100 rounded-box w-40"
+        >
+          <div className="flex justify-center">
+          <RiAccountCircleFill className="h-16 w-16" />
+          </div>
+          <li className="btn btn-sm">
+            <Link
+              to="/Profile"
+              onClick={() => setIsMenuOpen(false)}
+              className=""
+            >
+              View Profile
+            </Link>
+          </li>
+          <li>
+            <button
+              className="inline-flex items-center justify-center py-2 w-20 mx-auto my-2 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-orange-400 focus:shadow-outline focus:outline-none"
+              onClick={handleLogOut}
+            >
+              LogOut
+            </button>
+          </li>
+        </ul>
+      </div>
+      
+    
+      }
         </ul>
         <div className="lg:hidden">
           <button
@@ -154,7 +191,7 @@ export const NavBar = () => {
                       title="Company"
                       className="inline-flex items-center"
                     >
-                      <span className="ml-2 text-xl font-bold tracking-wide text-gray-800 uppercase">
+                      <span className="ml-2 text-xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-accent via-purple-400 to-orange-600 uppercase">
                         Amar Kotha
                       </span>
                     </Link>
@@ -217,7 +254,7 @@ export const NavBar = () => {
                     )}
                     <li>
                       <Link
-                        to="/"
+                        to="/Media"
                         onClick={() => setIsMenuOpen(false)}
                         aria-label="Our product"
                         title="Our product"
